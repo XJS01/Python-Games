@@ -129,71 +129,31 @@ class MinesweeperGrid(Frame):
                 self.cells[keys[i]].setNum(9)
             #Give appropriate numbers to cells depending on the bomb arrangement
             coords=list(self.cells)
+            rdiff=[0,0,-1,-1,-1,1,1,1] #produce the eight possible directions
+            cdiff=[-1,1,-1,0,1,-1,0,1]
             for coord in self.cells:
                 if self.cells[coord].getNum()==9: #Find the bombs and increase the bomb counter of adjacent cells
-                    #check there is an adjacent cell on each side
-                    if coord[0]+1<=self.height-1:
-                        self.cells[(coord[0]+1, coord[1])].incrBombCounter()
-                    if coord[1]+1<=self.length-1:
-                        self.cells[(coord[0], coord[1]+1)].incrBombCounter()
-                    if coord[0]+1<=self.height-1 and coord[1]+1<=self.length-1:
-                        self.cells[(coord[0]+1, coord[1]+1)].incrBombCounter()
-                    if coord[0]-1>=0:
-                        self.cells[(coord[0]-1, coord[1])].incrBombCounter()
-                    if coord[1]-1>=0:
-                        self.cells[(coord[0], coord[1]-1)].incrBombCounter()
-                    if coord[0]-1>=0 and coord[1]-1>=0:
-                        self.cells[(coord[0]-1, coord[1]-1)].incrBombCounter()
-                    if coord[0]-1>=0 and coord[1]+1<=self.length-1:
-                        self.cells[(coord[0]-1, coord[1]+1)].incrBombCounter()
-                    if coord[0]+1<=self.height-1 and coord[1]-1>=0:
-                        self.cells[(coord[0]+1, coord[1]-1)].incrBombCounter()
+                    for i in range(8): #loop through the 8 directions to increase their bomb counters
+                        adj_r=coord[0]+rdiff[i]
+                        adj_c=coord[1]+cdiff[i]
+                        if adj_r >=0 and adj_r <=self.height-1 and adj_c <=self.length-1 and adj_c >=0: #makes sure cell is in grid
+                            self.cells[(adj_r, adj_c)].incrBombCounter()
             self.updateCells()
         
     def activateAdj(self,coord):
         'activates adjacent empty cells'
-        #check there is an adjacent cell on each side
-        if coord[0]+1<=self.height-1: #make sure the adjacent cell is in the grid
-            if not self.cells[(coord[0]+1, coord[1])].is_activated() and not self.cells[(coord[0]+1, coord[1])].is_flagged():
-                self.cells[(coord[0]+1, coord[1])].manualActivate()
-                if self.cells[(coord[0]+1, coord[1])].getNum()==0: #check if the adjacent cell does not have a number
-                    self.activateAdj((coord[0]+1, coord[1])) #activate the adjacent cell and its adjacent cells
-        if coord[1]+1<=self.length-1: #make sure the adjacent cell is in the grid
-            if not self.cells[(coord[0], coord[1]+1)].is_activated() and not self.cells[(coord[0], coord[1]+1)].is_flagged():
-                self.cells[(coord[0], coord[1]+1)].manualActivate()
-                if self.cells[(coord[0], coord[1]+1)].getNum()==0: #check if the adjacent cell does not have a number
-                    self.activateAdj((coord[0], coord[1]+1)) #activate the adjacent cell and its adjacent cells
-        if coord[0]+1<=self.height-1 and coord[1]+1<=self.length-1: #make sure the adjacent cell is in the grid
-            if not self.cells[(coord[0]+1, coord[1]+1)].is_activated() and not self.cells[(coord[0]+1, coord[1]+1)].is_flagged():
-                self.cells[(coord[0]+1, coord[1]+1)].manualActivate()
-                if self.cells[(coord[0]+1, coord[1]+1)].getNum()==0: #check if the adjacent cell does not have a number
-                    self.activateAdj((coord[0]+1, coord[1]+1)) #activate the adjacent cell and its adjacent cells
-        if coord[0]-1>=0: #make sure the adjacent cell is in the grid
-            if not self.cells[(coord[0]-1, coord[1])].is_activated() and not self.cells[(coord[0]-1, coord[1])].is_flagged():
-                self.cells[(coord[0]-1, coord[1])].manualActivate()
-                if self.cells[(coord[0]-1, coord[1])].getNum()==0: #check if the adjacent cell does not have a number
-                    self.activateAdj((coord[0]-1, coord[1])) #activate the adjacent cell and its adjacent cells
-        if coord[1]-1>=0: #make sure the adjacent cell is in the grid
-            if not self.cells[(coord[0], coord[1]-1)].is_activated() and not self.cells[(coord[0], coord[1]-1)].is_flagged():
-                self.cells[(coord[0], coord[1]-1)].manualActivate()
-                if self.cells[(coord[0], coord[1]-1)].getNum()==0: #check if the adjacent cell does not have a number
-                    self.activateAdj((coord[0], coord[1]-1)) #activate the adjacent cell and its adjacent cells         
-        if coord[0]-1>=0 and coord[1]-1>=0: #make sure the adjacent cell is in the grid
-            if not self.cells[(coord[0]-1, coord[1]-1)].is_activated() and not self.cells[(coord[0]-1, coord[1]-1)].is_flagged():
-                self.cells[(coord[0]-1, coord[1]-1)].manualActivate()
-                if self.cells[(coord[0]-1, coord[1]-1)].getNum()==0: #check if the adjacent cell does not have a number
-                    self.activateAdj((coord[0]-1, coord[1]-1)) #activate the adjacent cell and its adjacent cells  
-        if coord[0]-1>=0 and coord[1]+1<=self.length-1: #make sure the adjacent cell is in the grid
-            if not self.cells[(coord[0]-1, coord[1]+1)].is_activated() and not self.cells[(coord[0]-1, coord[1]+1)].is_flagged():
-                self.cells[(coord[0]-1, coord[1]+1)].manualActivate()
-                if self.cells[(coord[0]-1, coord[1]+1)].getNum()==0: #check if the adjacent cell does not have a number
-                    self.activateAdj((coord[0]-1, coord[1]+1)) #activate the adjacent cell and its adjacent cells  
-        if coord[0]+1<=self.height-1 and coord[1]-1>=0: #make sure the adjacent cell is in the grid
-            if not self.cells[(coord[0]+1, coord[1]-1)].is_activated() and not self.cells[(coord[0]+1, coord[1]-1)].is_flagged():
-                self.cells[(coord[0]+1, coord[1]-1)].manualActivate()
-                if self.cells[(coord[0]+1, coord[1]-1)].getNum()==0: #check if the adjacent cell does not have a number
-                    self.activateAdj((coord[0]+1, coord[1]-1)) #activate the adjacent cell and its adjacent cells       
-    
+
+        rdiff=[0,0,-1,-1,-1,1,1,1] #produce the eight possible directions
+        cdiff=[-1,1,-1,0,1,-1,0,1]
+        for i in range(8): #loop through the 8 directions
+            adj_r=coord[0]+rdiff[i]
+            adj_c=coord[1]+cdiff[i]
+            if adj_r >=0 and adj_r <=self.height-1 and adj_c <=self.length-1 and adj_c >=0 \
+               and not self.cells[(adj_r, adj_c)].is_activated() and not self.cells[(adj_r, adj_c)].is_flagged(): #makes sure the cell isn't activated or flagged
+                self.cells[(adj_r, adj_c)].manualActivate()
+                if  self.cells[(adj_r, adj_c)].getNum()==0: #check if the adjacent cell does not have a number
+                    self.activateAdj((adj_r, adj_c))        
+
     def updateLabel(self):
         'update the bombs remainding label'
         self.bombLabel['text']=str(self.bombsLeft)   
