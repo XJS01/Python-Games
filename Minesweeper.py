@@ -149,7 +149,8 @@ class MinesweeperGrid(Frame):
             adj_r=coord[0]+rdiff[i]
             adj_c=coord[1]+cdiff[i]
             if adj_r >=0 and adj_r <=self.height-1 and adj_c <=self.length-1 and adj_c >=0 \
-               and not self.cells[(adj_r, adj_c)].is_activated() and not self.cells[(adj_r, adj_c)].is_flagged(): #makes sure the cell isn't activated or flagged
+               and not self.cells[(adj_r, adj_c)].is_activated()\
+               and not self.cells[(adj_r, adj_c)].is_flagged(): #makes sure the cell isn't activated or flagged and is in the grid
                 self.cells[(adj_r, adj_c)].manualActivate()
                 if  self.cells[(adj_r, adj_c)].getNum()==0: #check if the adjacent cell does not have a number
                     self.activateAdj((adj_r, adj_c))        
